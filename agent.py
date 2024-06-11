@@ -14,8 +14,8 @@ class Agent:
     
     def __init__(self):
         self.n_games = 0
-        self. epsilon = 0 # controls randomness
-        self.gamma = 0.9 # discount rate (<1)
+        self.epsilon = 0 # controls randomness
+        self.gamma = 0.9 # discount rate (<1) meaning weight of immediate rewards vs future rewards
         self.memory = deque(maxlen=MAX_MEMORY) #popleft()
         self.model = Linear_QNet(11, 256, 3) # 11 inputs, 256 hidden, 3 outputs
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
@@ -72,6 +72,7 @@ class Agent:
     def remember(self, state, action, reward, next_state, done):
         self.memory.append((state, action, reward, next_state, done)) # popleft if MAX_MEMORY is reached
 
+    # trains model on many trials
     def train_long_memory(self):
         if len(self.memory) > BATCH_SIZE: 
             mini_sample = random.sample(self.memory, BATCH_SIZE) # list of tuples
@@ -81,6 +82,7 @@ class Agent:
         states, actions, rewards, next_states, dones = zip(*mini_sample)
         self.trainer.train_step(states, actions, rewards, next_states, dones)
 
+    # trains model on last trial
     def train_short_memory(self, state, action, reward, next_state, done):
         self.trainer.train_step(state, action, reward, next_state, done)
 

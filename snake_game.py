@@ -37,6 +37,7 @@ class SnakeGameAI:
         self.clock = pygame.time.Clock()
         self.reset()
 
+    # Resets the game state & initializes the snake position & direction
     def reset(self):
         self.direction = Direction.RIGHT
 
@@ -116,6 +117,7 @@ class SnakeGameAI:
         text = font.render("Score: " + str(self.score), True, WHITE)
         self.display.blit(text, [0, 0])
         pygame.display.flip()
+        
         
     def _move(self, action):
         # [straight, right, left]
